@@ -136,7 +136,7 @@ const main = (data) => {
 			if (rawConsent) {
 				const consent = JSON.parse(fromBase64(rawConsent));
 				if (consent) {
-                    const purposeStateUpdate = {};
+          const purposeStateUpdate = {};
 					for (const purposeCode in consent) {
 						const val = consent[purposeCode];
 						if (val) {

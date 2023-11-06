@@ -1,0 +1,5 @@
+homepage: "https://www.ketch.com/"
+documentation: "https://docs.ketch.com/hc/en-us/articles/1500012811962-Automated-Web-Infrastructure-Orchestration-with-Google-Tag-Manager"
+versions:
+  - sha: e46bd3bc4b9b8253f58c40c344191cf12d5a983d
+    changeNotes: Initial release

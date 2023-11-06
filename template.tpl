@@ -89,6 +89,7 @@ const main = (data) => {
 
 	let settings = [];
         
+  //Europe regions - GDPR & ePrivacy      
 	const settingObject_eea = {
 	analytics: 'denied',
 	analytics_storage: 'denied',
@@ -98,13 +99,10 @@ const main = (data) => {
 	
 
 	const settingObject_default = {
-	analytics: 'denied',
-	analytics_storage: 'denied',
-	
+	analytics: 'granted',
+	analytics_storage: 'granted'
 	};
 	settings.push(settingObject_default);
-	
-
 
 	const canonicalPurposeGoogleKeyMap = {
 		behavioral_advertising: ['ad_storage'],

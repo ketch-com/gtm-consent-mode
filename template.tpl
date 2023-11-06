@@ -20,7 +20,30 @@
 
 ___TEMPLATE_PARAMETERS___
 
-[]
+[
+  {
+    "type": "GROUP",
+    "name": "Google Tag Settings",
+    "displayName": "Google Tag Settings",
+    "groupStyle": "ZIPPY_CLOSED",
+    "subParams": [
+      {
+        "type": "CHECKBOX",
+        "name": "url_passthrough",
+        "checkboxText": "Pass Ad Click Information Through URLs",
+        "simpleValueType": true,
+        "help": "Check this if you want internal links to pass advertising identifiers (\u003cstrong\u003egclid\u003c/strong\u003e, \u003cstrong\u003edclid\u003c/strong\u003e, \u003cstrong\u003egclsrc\u003c/strong\u003e, \u003cstrong\u003e_gl\u003c/strong\u003e) in the link URL while waiting for consent to be granted."
+      },
+      {
+        "type": "CHECKBOX",
+        "name": "ads_data_redaction",
+        "checkboxText": "Redact Ads Data",
+        "simpleValueType": true,
+        "help": "If this is checked \u003cstrong\u003eand\u003c/strong\u003e Advertising consent status is \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags will drop all advertising identifiers from the requests, and traffic will be routed through cookieless domains."
+      }
+    ]
+  }
+]
 
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
@@ -33,6 +56,7 @@ const copyFromWindow = require('copyFromWindow');
 const getCookieValues = require('getCookieValues');
 const JSON = require('JSON');
 const fromBase64 = require('fromBase64');
+const gtagSet = require('gtagSet');
 
 /**
 * Called when consent changes. Assumes that consent object contains keys which
@@ -55,8 +79,17 @@ const onUserConsent = (consent) => {
 */
 const main = (data) => {
 
+  // Set developer ID
+	gtagSet('developer_id.dN2JhM2', true);
+
+	gtagSet({
+		url_passthrough: data.url_passthrough || false,
+		ads_data_redaction: data.ads_data_redaction || false
+	});
+
 	let settings = [];
         
+  //Europe regions - GDPR & ePrivacy      
 	const settingObject_eea = {
 	analytics: 'denied',
 	analytics_storage: 'denied',
@@ -66,13 +99,10 @@ const main = (data) => {
 	
 
 	const settingObject_default = {
-	analytics: 'denied',
-	analytics_storage: 'denied',
-	
+	analytics: 'granted',
+	analytics_storage: 'granted'
 	};
 	settings.push(settingObject_default);
-	
-
 
 	const canonicalPurposeGoogleKeyMap = {
 		behavioral_advertising: ['ad_storage'],
@@ -507,6 +537,40 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "_ketch_consent_v1_"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": false
+    },
+    "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "write_data_layer",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "keyPatterns",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "url_passthrough"
+              },
+              {
+                "type": 1,
+                "string": "ads_data_redaction"
+              },
+              {
+                "type": 1,
+                "string": "developer_id.dN2JhM2"
               }
             ]
           }

@@ -3,3 +3,5 @@ documentation: "https://docs.ketch.com/hc/en-us/articles/1500012811962-Automated
 versions:
   - sha: fcaa7960ab29b641bfeae6ab9edf272ca729b75e
     changeNotes: Initial release
+  - sha: d3035ce1bac76e43e6510cff3c8708b50b3796a8
+    changeNotes: Added new google consent keys

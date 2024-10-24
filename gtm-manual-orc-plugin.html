@@ -1,0 +1,53 @@
+<script>
+        
+    window.ketch("on", "consent", (consent) => {
+      const ketchUpdatedConsent = consent.purposes;
+
+      window.ketch("getConfig", (ketchConfig) => {
+        const purposeConfig = ketchConfig.purposes;
+
+        var canonicalPurposeGoogleKeyMap = {
+          behavioral_advertising: ["ad_storage", "ad_user_data"],
+          analytics: ["analytics_storage"],
+          essential_services: ["functionality_storage", "security_storage"],
+          personalization: ["personalization_storage", "ad_personalization"],
+        };
+
+        let consentWithGooglePurposes = {};
+
+        for (const purposeCode in ketchUpdatedConsent) {
+          if (!purposeCode.includes(".")) {
+            consentWithGooglePurposes[purposeCode] = ketchUpdatedConsent[purposeCode];
+            for (const purpose of purposeConfig) {
+              if (purpose.code === purposeCode) {
+                const canonicalPurposes = purpose.canonicalPurposeCodes;
+                if (canonicalPurposes) {
+                  for (const canonicalPurpose of canonicalPurposes) {
+                    if (canonicalPurposeGoogleKeyMap[canonicalPurpose]) {
+                      const gPurposes = canonicalPurposeGoogleKeyMap[canonicalPurpose];
+                      for (const gp of gPurposes) {
+                        if (consentWithGooglePurposes[gp]) {
+                          consent[gp] = consentWithGooglePurposes[gp] || ketchUpdatedConsent[purposeCode];
+                        } else {
+                          consentWithGooglePurposes[gp] = ketchUpdatedConsent[purposeCode];
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (consent.purposes && window.gtmConsentListeners) {
+          const consentUpdate = { purposes: consentWithGooglePurposes };
+          window.gtmConsentListeners?.forEach((callback) => {
+              callback(consentUpdate);
+          });
+        }
+        
+      });
+    });
+    
+</script>
